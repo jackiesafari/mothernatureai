@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import WalletConnect from '../components/WalletConnect';
 
 interface Storm {
   id: string;
@@ -29,6 +30,7 @@ export default function PredictPage() {
   const [selectedCity, setSelectedCity] = useState<string>('');
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
 
   // Cities at risk (this could be dynamic based on storm location)
   const citiesAtRisk = ['Miami', 'Tampa', 'Jacksonville', 'Charleston', 'Houston'];
@@ -62,6 +64,11 @@ export default function PredictPage() {
   };
 
   const handleVote = async (stormId: string, city: string, vote: 'hit' | 'miss') => {
+    if (!isWalletConnected) {
+      alert('Please connect your wallet first to make a prediction');
+      return;
+    }
+
     // In a real app, this would be an API call to your backend
     setPredictions(prev => {
       const existingPrediction = prev.find(p => p.stormId === stormId && p.city === city);
@@ -87,6 +94,15 @@ export default function PredictPage() {
         willMiss: vote === 'miss' ? 1 : 0
       }];
     });
+
+    // Here you would trigger your smart contract interaction
+    try {
+      // Example smart contract interaction
+      // const contract = new ethers.Contract(contractAddress, abi, signer);
+      // await contract.submitPrediction(stormId, city, vote === 'hit');
+    } catch (error) {
+      console.error('Error submitting prediction to blockchain:', error);
+    }
   };
 
   if (loading) {
@@ -95,7 +111,10 @@ export default function PredictPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Natural Disaster Prediction System</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Natural Disaster Prediction System</h1>
+        <WalletConnect />
+      </div>
       
       {/* Storm Selection */}
       <div className="mb-6">
