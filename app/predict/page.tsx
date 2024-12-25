@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import WalletConnect from '../components/WalletConnect';
+import { WalletDefault } from '@coinbase/onchainkit/wallet';
+
 
 interface Storm {
   id: string;
@@ -113,7 +113,7 @@ export default function PredictPage() {
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Natural Disaster Prediction System</h1>
-        <WalletConnect />
+        <WalletDefault />
       </div>
       
       {/* Storm Selection */}
